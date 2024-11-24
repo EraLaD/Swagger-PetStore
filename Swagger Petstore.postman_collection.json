@@ -1,0 +1,3356 @@
+{
+	"info": {
+		"_postman_id": "09540abc-4ac8-4092-9f0c-f90cbcdb9133",
+		"name": "Swagger Petstore",
+		"description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.\n\nContact Support:\n Email: apiteam@swagger.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39806608",
+		"_collection_link": "https://dd9999-7641.postman.co/workspace/dd-Workspace~1809cf58-174b-44bc-80e7-f2f404dd810d/collection/39806608-09540abc-4ac8-4092-9f0c-f90cbcdb9133?action=share&source=collection_link&creator=39806608"
+	},
+	"item": [
+		{
+			"name": "pet",
+			"item": [
+				{
+					"name": "Add a new pet Inavlid input",
+					"item": [
+						{
+							"name": "Add a new pet- Invalid input",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Verify the petsname field is not empty\r",
+											"let petName = JSON.parse(pm.request.body.raw).name;\r",
+											"pm.test(petName!=null)\r",
+											"\r",
+											"//Verify the petID field is not empty\r",
+											"let petId = JSON.parse(pm.request.body.raw).id;\r",
+											"pm.test(petId!=null);\r",
+											"\r",
+											"//Verify the HTTP method of the request is not POST\r",
+											"const httpMethod = pm.request.method;\r",
+											"pm.test(\"Verify the HTTP method of the request is not POST\",function(){\r",
+											"    httpMethod!= \"POST\";\r",
+											"    console.log(\"The HTTP method of the request-> \",httpMethod);\r",
+											"    });\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify response status code for the invalid input when adding a new pet to the store\r",
+											"pm.test(\"Response status code for the invalid input , when adding a new pet is 405\", function () {\r",
+											"  pm.response.to.have.status(405);\r",
+											"});\r",
+											"\r",
+											"//execution of the successful adding of a pet\r",
+											"// pm.execution.setNextRequest(\"Add a new pet to the store\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"{{petID}}\",\n  \"category\": {\n    \"id\": \"{{petID}}\",\n    \"name\": \"string\"\n  },\n  \"name\": \"{{petsname}}\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Add a new pet to the store -Successful operation",
+					"item": [
+						{
+							"name": "Add a new pet to the store Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"petsname\", pm.collectionVariables.replaceIn(\"{{$randomFirstName}}\"));\r",
+											"\r",
+											"pm.collectionVariables.set(\"petID\", pm.collectionVariables.replaceIn(\"{{$randomInt}}\"));\r",
+											"\r",
+											"//Verify the petsname field is not empty\r",
+											"const petName = JSON.parse(pm.request.body.raw).name;\r",
+											"pm.test(\"Verify the petsname field is not empty\",function(){\r",
+											"    petName!=null\r",
+											"    });\r",
+											"\r",
+											"//Verify the petID field is not empty\r",
+											"const petId = JSON.parse(pm.request.body.raw).id;\r",
+											"pm.test(\"Verify the petID field is not empty\",function(){\r",
+											"    petId!=null\r",
+											"    });\r",
+											" \r",
+											"pm.collectionVariables.set(\"petStatus\", pm.collectionVariables.replaceIn(JSON.parse(pm.request.body.raw).status));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Check if petsname field is present and not empty\", function () {\r",
+											"  const responseData = pm.response.json();\r",
+											"  pm.expect(responseData).to.have.property('name').that.is.not.empty;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"//Verify the random name set for the pet  and the name received from the response are the same.\r",
+											"pm.test(\"Verify the name received from the response. \"), function () {\r",
+											"  pm.expect(responseData).to.have.property('name').Arguments.equals( pm.collectionVariables.get(\"petsname\"));\r",
+											"};\r",
+											"\r",
+											"//Verify the random id set for the pet  and the id received from the response are the same.\r",
+											"pm.test(\"Verify the name received from the response. \"), function () {\r",
+											"  pm.expect(responseData).to.have.property('id').Arguments.equals( pm.collectionVariables.get(\"petID\"));\r",
+											"};\r",
+											"\r",
+											"//execution of the searching for a pet by valid ID\r",
+											"// pm.execution.setNextRequest(\"Find pet by ID-successful operation\");\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{petID}}\",\n    \"category\": {\n        \"id\": \"{{petID}}\",\n        \"name\": \"string\"\n    },\n    \"name\": \"{{petsname}}\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 0,\n            \"name\": \"string\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Find pet by ID",
+					"item": [
+						{
+							"name": "Find pet by ID-successful operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Verify the petID is passed as a paramater\r",
+											"const idOfPet = pm.collectionVariables.get(\"petID\");\r",
+											"pm.test(\"Verify the petID is passed as a paramater. \"), function () {\r",
+											"  pm.expect(idOfPet).not.null; \r",
+											"};\r",
+											" console.log(\"The pet id searched for= \",idOfPet);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseData = pm.response.json();\r",
+											"\r",
+											"//Verify response status code for the successfull retrieval of data for a valid petID\r",
+											"pm.test(\"Verify response status code is 200 for the successfull retrieval of data for a valid petID\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"//Verify petsname field is present and not empty\r",
+											"pm.test(\"Check if petsname field is present and not empty\", function () {\r",
+											"  pm.expect(responseData).to.have.property('name').that.is.not.empty;\r",
+											"  console.log(\"Name of the pet searched by id= \",responseData.name);\r",
+											"});\r",
+											"\r",
+											"//Verify the id searched for and the id received from the response are the same.\r",
+											"pm.test(\"Verify the id searched for and the id received from the response are the same. \"), function () {\r",
+											"  pm.expect(responseData).to.have.property('id').Arguments.equals(idOfPet);  \r",
+											"};\r",
+											"console.log(\"The pet id received in the response= \",responseData.id);\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "api_key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "{{petID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "invalid id supplied",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Verify the petID is passed as a paramater and it is not a valid one\r",
+											"const idOfPet = pm.request.url.variables.get(\"petId\");\r",
+											"pm.test(\"Verify the petID is passed as a paramater. \"), function () {\r",
+											"  pm.expect(idOfPet).not.null; \r",
+											"};\r",
+											" console.log(\"The pet id searched for= \",idOfPet);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseData = pm.response;\r",
+											"//Verify response status code 400 for the retrieval of data for a invalid petID\r",
+											"pm.test(\"Verify response status code 400 for the retrieval of data for a invalid petID\", function () {\r",
+											"  pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"//Verify the response body is empty\r",
+											"pm.test(\"Verify the response body is empty when searched for invalid pet ID\", function () {\r",
+											"  pm.expect(responseData).length==0;\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "$%"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "pet not found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Verify the petID is passed as a paramater\r",
+											"const idOfPet = (pm.collectionVariables.get(\"petIDWithoutRecord\"));\r",
+											"pm.test(\"Verify the non-existing petID was passed as a paramater. \"), function () {\r",
+											"  pm.expect(pm.request.url.variables.get(\"petId\")).not.null; \r",
+											"};\r",
+											" console.log(\"The non-existing pet id searched for= \",idOfPet);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseData = pm.response.json();\r",
+											"//Verify response status code 404 for the retrieval of data for a non-existing petID\r",
+											"pm.test(\"Verify that the response status code is 404 when searched for non-existing pet id.\", function () {\r",
+											"  pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"//Verify response body fields\r",
+											"pm.test(\"Verify response body fields\", function () {\r",
+											"  pm.expect(responseData).to.be.an('object');\r",
+											"  pm.expect(responseData.code).to.equal(1);\r",
+											"  pm.expect(responseData.type).to.equal('error');\r",
+											"  pm.expect(responseData.message).to.equal('Pet not found');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "{{petIDWithoutRecord}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findByStatus",
+					"item": [
+						{
+							"name": "Finds Pets by status - Successful Operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const status = pm.collectionVariables.get(\"petStatus\");\r",
+											"pm.test(\"Verify the status is passed as a paramater. \"), function () {\r",
+											"  pm.expect(status).not.null; \r",
+											"};\r",
+											" console.log(\"The pet status searched for= \",status);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseData = pm.response.json();\r",
+											"\r",
+											"//Verify response status code for the successfull retrieval of data for a valid status\r",
+											"pm.test(\"Verify response status code for the successfull retrieval of data for a valid status\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/findByStatus?status={{petStatus}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										"findByStatus"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "{{petStatus}}",
+											"description": "(Required) Status values that need to be considered for filter"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Finds Pets by status - invalid values",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const status = JSON.stringify(pm.request.url.getQueryString());\r",
+											"\r",
+											"//Verify the invalid status is passed as a paramater. \r",
+											"pm.test(\"Verify the invalid status is passed as a paramater. \"), function () {\r",
+											"  pm.expect(status).not.null; \r",
+											"};\r",
+											"\r",
+											"const validStatuses = pm.collectionVariables.get('validStatusesForPets').split(\",\");\r",
+											"//Verify an invalid status is passed as a paramater.\r",
+											"pm.test(\"Verify the status passed is invalid. \"),function(){\r",
+											"    pm.expect(validStatuses.includes(status)).not.true; \r",
+											"};\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseData = pm.response.json();\r",
+											"\r",
+											"//Verify response status code for the retrieval of data for a invalid status\r",
+											"pm.test(\"Verify response status code for the retrieval of data for a invalid status\", function () {\r",
+											"  pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/findByStatus?status=12",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										"findByStatus"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "12"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findByTags",
+					"item": [
+						{
+							"name": "Find Pets by tags - successful operation",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/findByTags?tags=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										"findByTags"
+									],
+									"query": [
+										{
+											"key": "tags",
+											"value": "<string>",
+											"description": "(Required) Tags to filter by"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find Pets by tags - invalid value",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/findByTags?tags=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										"findByTags"
+									],
+									"query": [
+										{
+											"key": "tags",
+											"value": "<string>",
+											"description": "(Required) Tags to filter by"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Updates a pet in the store with form data",
+					"item": [
+						{
+							"name": "Updates a pet in the store with form data - invalid operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"newPetName\", pm.variables.replaceIn(\"{{$randomLastName}}\"));\r",
+											"pm.variables.set(\"newStatus\", pm.variables.replaceIn(\"sold\"));\r",
+											"\r",
+											"// Verify the petID is passed as a paramater\r",
+											"const idOfPet = pm.collectionVariables.get(\"petID\");\r",
+											"pm.test(\"Verify the petID is passed as a paramater when updating pet in store with form data. \"), function () {\r",
+											"  pm.expect(idOfPet).not.null; \r",
+											"};\r",
+											" console.log(\"The pet id searched for to update pet info in store with form data.= \",idOfPet);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Fixed JSON parsing error\r",
+											"pm.test(\"Verify response status code is 405 when updating pet in store with form data as PUT request.\", function () {\r",
+											"  pm.response.to.have.status(405);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{newPetName}}",
+											"description": "Updated name of the pet"
+										},
+										{
+											"key": "status",
+											"value": "{{newStatus}}",
+											"description": "Updated status of the pet"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "{{petID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Updates an existing pet",
+					"item": [
+						{
+							"name": "Update an existing pet - Invalid ID supplied",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"newPetName\", pm.variables.replaceIn(\"{{$randomLastName}}\"));\r",
+											"const requestData = pm.request.body;\r",
+											"\r",
+											"pm.test(\"Check if id field is present and not empty\", function () {\r",
+											"  pm.expect(requestData.raw.split(\",\")[0].split(\"\\n\")[1].split(\":\")[1]).is.not.null;\r",
+											"});\r",
+											"// console.log(requestData.raw)\r",
+											"// console.log(requestData.raw.split(\",\")[0].split(\"\\n\")[1].split(\":\")[1])"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": $%,\n    \"category\": {\n        \"id\": \"$%\",\n        \"name\": \"string\"\n    },\n    \"name\": \"{{newPetName}}\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 0,\n            \"name\": \"string\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update an existing pet - pet not found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"petidWithoutRecord\", require('lodash')(0, 999999999999959999999595999999999999995));\r",
+											"pm.collectionVariables.set(\"baseUrl\", \"https://petstore.swagger.io/v2/\");\r",
+											"\r",
+											"pm.variables.set(\"newPetName\", pm.variables.replaceIn(\"{{$randomLastName}}\"));\r",
+											"const requestData = JSON.parse(pm.request.body.raw);\r",
+											"\r",
+											"// Verify the petID is passed as a paramater\r",
+											"pm.test(\"Check if id field is present and not empty, when update an existing pet- pet not found\"),function () {\r",
+											"  pm.expect(requestData(\"id\")).not.null; \r",
+											"};\r",
+											"\r",
+											"// Verify the pet name is passed as a paramater\r",
+											"pm.test(\"Check if pet name field is present and not empty, when update an existing pet- pet not found\"),function () {\r",
+											"  pm.expect(requestData(\"name\")).not.null; \r",
+											"};"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 404, when update an existing pet- pet not found\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(404);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"//Reset baseURL\r",
+											"pm.collectionVariables.set(\"baseUrl\", \"https://petstore.swagger.io/v2\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{petidWithoutRecord}}\",\n    \"category\": {\n        \"id\": \"{{petidWithoutRecord}}\",\n        \"name\": \"string\"\n    },\n    \"name\": \"{{petsname}}\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 0,\n            \"name\": \"string\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update an existing pet - Validation exception",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Verify the petsname field is not empty\r",
+											"let petName = JSON.parse(pm.request.body.raw).name;\r",
+											"pm.test(\"Update an existing pet - Validation exception. Verify pets name field is not empty.\",petName!=null)\r",
+											"\r",
+											"//Verify the petID field is not empty\r",
+											"let petId = JSON.parse(pm.request.body.raw).id;\r",
+											"pm.test(\"Update an existing pet - Validation exception. Verify pets ID field is not empty.\",petId!=null);\r",
+											"\r",
+											"//Verify the HTTP method of the request is not PUT\r",
+											"const httpMethod = pm.request.method;\r",
+											"pm.test(\"Verify the HTTP method of the request of updating an exisitng pet is not PUT\",function(){\r",
+											"    httpMethod!= \"PUT\";\r",
+											"    console.log(\"The HTTP method of the request-> \",httpMethod);\r",
+											"    });\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify response status code for Update an existing pet - Validation exception\r",
+											"pm.test(\"Response status code for Update an existing pet - Validation exception , is 405\", function () {\r",
+											"  pm.response.to.have.status(405);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{petID}}\",\n    \"category\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n    },\n    \"name\": \"{{petsname}}\",\n    \"photoUrls\": [\n        \"<string>\",\n        \"<string>\"\n    ],\n    \"tags\": [\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        },\n        {\n            \"id\": \"<long>\",\n            \"name\": \"<string>\"\n        }\n    ],\n    \"status\": \"sold\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Deletes a pet by ID",
+					"item": [
+						{
+							"name": "Deletes a pet by ID - Invalid ID supplied",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Set invalid value for the petid\r",
+											"pm.variables.set(\"invalidID\", pm.variables.replaceIn(\"^^&^\"));\r",
+											"\r",
+											"// Verify the petID is passed as a paramater\r",
+											"pm.test(\"Check if id field is present and not empty, when deletes a pet by ID - Invalid ID supplied\"),function () {\r",
+											"  pm.expect(requestData(\"id\")).not.null; \r",
+											"};"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Verify response status code is 400, when deleting a pet by ID - Invalid ID supplied\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<string>"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "{{invalidID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deletes a pet by ID - Pet Not Found",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"//Set value for the petid\r",
+											"pm.variables.set(\"newPetID\", pm.variables.replaceIn(\"{{$randomBankAccount}}\"));\r",
+											"\r",
+											"// Verify the petID is passed as a paramater\r",
+											"pm.test(\"Check if id field is present and not empty, when deletes a pet by ID - Pet Not Found\"),function () {\r",
+											"  pm.expect(requestData(\"id\")).not.null; \r",
+											"};"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Verify response status code is 404, when deleting a pet by ID - Pet Not Found\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<string>"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "{{newPetID}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deletes a pet - Successful operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// Verify the petID is passed as a paramater\r",
+											"pm.test(\"Check if id field is present and not empty, when deleting a pet - Successful operation\"),function () {\r",
+											"  pm.expect(requestData(\"id\")).not.null; \r",
+											"};"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Verify response status code is 200, when deleting a pet - Successful operation\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<string>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "{{petID}}",
+											"description": "(Required) Pet id to delete"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Create User",
+					"item": [
+						{
+							"name": "createWithList",
+							"item": [
+								{
+									"name": "Create list of users with given input array - successful operation",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Set values for the first user\r",
+													"pm.collectionVariables.set(\"username1\", pm.collectionVariables.replaceIn(\"user\"+\"{{$randomInt}}\"));\r",
+													"pm.collectionVariables.set(\"firstname1\", pm.collectionVariables.replaceIn(\"{{$randomFirstName}}\"));\r",
+													"pm.collectionVariables.set(\"lastname1\", pm.collectionVariables.replaceIn(\"{{$randomLastName}}\"));\r",
+													"pm.collectionVariables.set(\"userID1\", pm.collectionVariables.replaceIn(\"{{$randomInt}}{{$randomInt}}\"));\r",
+													"pm.collectionVariables.set(\"email1\", pm.collectionVariables.replaceIn(\"{{$randomEmail}}\"));\r",
+													"pm.collectionVariables.set(\"password1\", pm.collectionVariables.replaceIn(\"{{$randomPassword}}\"));\r",
+													"pm.collectionVariables.set(\"phone1\", pm.collectionVariables.replaceIn(_.random([lower=1000000000], [upper=9999999999])));\r",
+													"pm.collectionVariables.set(\"userStatus1\",pm.collectionVariables.replaceIn(_.random([lower=0], [upper=5])));\r",
+													"\r",
+													"//Set values for the second user\r",
+													"pm.collectionVariables.set(\"username2\", pm.collectionVariables.replaceIn(pm.collectionVariables.get(\"username1\")+\"2\"));\r",
+													"pm.collectionVariables.set(\"firstname2\", pm.collectionVariables.replaceIn(pm.collectionVariables.get(\"firstname1\")+\"2\"));\r",
+													"pm.collectionVariables.set(\"lastname2\", pm.collectionVariables.replaceIn(pm.collectionVariables.get(\"lastname1\")+\"2\"));\r",
+													"pm.collectionVariables.set(\"userID2\", pm.collectionVariables.replaceIn(pm.collectionVariables.get(\"userID1\")+2));\r",
+													"pm.collectionVariables.set(\"email2\", pm.collectionVariables.replaceIn(pm.collectionVariables.get(\"username2\")+\"@gmail.com\"));\r",
+													"pm.collectionVariables.set(\"password2\", pm.collectionVariables.replaceIn(\"{{$randomPassword}}\"));\r",
+													"pm.collectionVariables.set(\"phone2\", pm.collectionVariables.replaceIn(_.random([lower=1000000000], [upper=9999999999])));\r",
+													"pm.collectionVariables.set(\"userStatus2\", pm.collectionVariables.replaceIn(_.random([lower=0], [upper=5])));\r",
+													"\r",
+													"const requestData = JSON.parse(pm.request.body.raw);\r",
+													"\r",
+													"// Verify the all details are passed as a paramater\r",
+													"pm.test(\"Check all required details are passed, when creating list of users with given input array - successful operation\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).not.null; \r",
+													"  pm.expect(requestData(\"username\")).not.null; \r",
+													"  pm.expect(requestData(\"firstName\")).not.null; \r",
+													"  pm.expect(requestData(\"lastName\")).not.null; \r",
+													"  pm.expect(requestData(\"email\")).not.null; \r",
+													"  pm.expect(requestData(\"password\")).not.null; \r",
+													"  pm.expect(requestData(\"phone\")).not.null; \r",
+													"  pm.expect(requestData(\"userStatus\")).not.null; \r",
+													"};\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 200, when creating list of users with given input array - successful operation \r",
+													"\r",
+													"pm.test(\"Response status code is 200, when creating list of users with given input array - successful operation\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(200);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n  {\n    \"id\": \"{{userID1}}\",\n    \"username\": \"{{username1}}\",\n    \"firstName\": \"{{firstname1}}\",\n    \"lastName\": \"{{lastname1}}\",\n    \"email\": \"{{email1}}\",\n    \"password\": \"{{password1}}\",\n    \"phone\": \"{{phone1}}\",\n    \"userStatus\": \"{{userStatus1}}\"\n  },\n  {\n    \"id\": \"{{userID2}}\",\n    \"username\": \"{{username2}}\",\n    \"firstName\": \"{{firstname2}}\",\n    \"lastName\": \"{{lastname2}}\",\n    \"email\": \"{{email2}}\",\n    \"password\": \"{{password2}}\",\n    \"phone\": \"{{phone2}}\",\n    \"userStatus\": \"{{userStatus2}}\"\n  }\n]",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user/createWithList",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												"createWithList"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "createWithArray",
+							"item": [
+								{
+									"name": "Creates list of users with given input array",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Set values for the new user\r",
+													"pm.collectionVariables.set(\"username3\", pm.collectionVariables.replaceIn(\"{{username2}}\"+\"{{$randomInt}}\"));\r",
+													"pm.collectionVariables.set(\"firstname3\", pm.collectionVariables.replaceIn(\"{{$randomFirstName}}\"));\r",
+													"pm.collectionVariables.set(\"lastname3\", pm.collectionVariables.replaceIn(\"{{$randomLastName}}\"));\r",
+													"pm.collectionVariables.set(\"userID3\", pm.collectionVariables.replaceIn(\"{{$randomInt}}\"));\r",
+													"pm.collectionVariables.set(\"email3\", pm.collectionVariables.replaceIn(\"{{$randomEmail}}\"));\r",
+													"pm.collectionVariables.set(\"password3\", pm.collectionVariables.replaceIn(\"{{$randomPassword}}\"));\r",
+													"pm.collectionVariables.set(\"phone3\", pm.collectionVariables.replaceIn(_.random([lower=1000000000], [upper=9999999999])));\r",
+													"pm.collectionVariables.set(\"userStatus3\",pm.collectionVariables.replaceIn(_.random([lower=0], [upper=5])));\r",
+													"\r",
+													"const requestData = JSON.parse(pm.request.body.raw);\r",
+													"\r",
+													"// Verify the all details are passed \r",
+													"pm.test(\"Check all required details are passed, when creating list of users with given input array - successful operation\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).not.null; \r",
+													"  pm.expect(requestData(\"username\")).not.null; \r",
+													"  pm.expect(requestData(\"firstName\")).not.null; \r",
+													"  pm.expect(requestData(\"lastName\")).not.null; \r",
+													"  pm.expect(requestData(\"email\")).not.null; \r",
+													"  pm.expect(requestData(\"password\")).not.null; \r",
+													"  pm.expect(requestData(\"phone\")).not.null; \r",
+													"  pm.expect(requestData(\"userStatus\")).not.null; \r",
+													"};\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 200, when creating list of users with given input array - successful operation \r",
+													"\r",
+													"pm.test(\"Response status code is 200, when creating list of users with given input array - successful operation\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(200);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "[\n  {\n    \"id\": \"{{userID3}}\",\n    \"username\": \"{{username3}}\",\n    \"firstName\": \"{{firstname3}}\",\n    \"lastName\": \"{{lastname3}}\",\n    \"email\": \"{{email3}}\",\n    \"password\": \"{{password3}}\",\n    \"phone\": \"{{phone3}}\",\n    \"userStatus\": \"{{userStatus3}}\"\n  }\n]",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user/createWithArray",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												"createWithArray"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Create User",
+							"item": [
+								{
+									"name": "Create User",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Set values for the new user\r",
+													"pm.collectionVariables.set(\"username4\", pm.collectionVariables.replaceIn(\"{{username3}}\"+\"{{$randomInt}}\"));\r",
+													"pm.collectionVariables.set(\"firstname4\", pm.collectionVariables.replaceIn(\"{{$randomFirstName}}\"));\r",
+													"pm.collectionVariables.set(\"lastname4\", pm.collectionVariables.replaceIn(\"{{$randomLastName}}\"));\r",
+													"pm.collectionVariables.set(\"userID4\", pm.collectionVariables.replaceIn(\"{{$randomInt}}\"));\r",
+													"pm.collectionVariables.set(\"email4\", pm.collectionVariables.replaceIn(\"{{$randomEmail}}\"));\r",
+													"pm.collectionVariables.set(\"password4\", pm.collectionVariables.replaceIn(\"{{$randomPassword}}\"));\r",
+													"pm.collectionVariables.set(\"phone4\", pm.collectionVariables.replaceIn(_.random([lower=1000000000], [upper=9999999999])));\r",
+													"pm.collectionVariables.set(\"userStatus4\",pm.collectionVariables.replaceIn(_.random([lower=0], [upper=5])));\r",
+													"\r",
+													"const requestData = JSON.parse(pm.request.body.raw);\r",
+													"\r",
+													"// Verify the all details are passed \r",
+													"pm.test(\"Check all required details are passed, when creating a user - successful operation\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).not.null; \r",
+													"  pm.expect(requestData(\"username\")).not.null; \r",
+													"  pm.expect(requestData(\"firstName\")).not.null; \r",
+													"  pm.expect(requestData(\"lastName\")).not.null; \r",
+													"  pm.expect(requestData(\"email\")).not.null; \r",
+													"  pm.expect(requestData(\"password\")).not.null; \r",
+													"  pm.expect(requestData(\"phone\")).not.null; \r",
+													"  pm.expect(requestData(\"userStatus\")).not.null; \r",
+													"};\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 200, when creating a user - successful operation\r",
+													"\r",
+													"pm.test(\"Response status code is 200, when creating a user - successful operation\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(200);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "  {\n    \"id\": \"{{userID4}}\",\n    \"username\": \"{{username4}}\",\n    \"firstName\": \"{{firstname4}}\",\n    \"lastName\": \"{{lastname4}}\",\n    \"email\": \"{{email4}}\",\n    \"password\": \"{{password4}}\",\n    \"phone\": \"{{phone4}}\",\n    \"userStatus\": \"{{userStatus4}}\"\n  }",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "login",
+					"item": [
+						{
+							"name": "Logs user into the system - successful operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const queryParams = pm.request.url.query.toObject();\r",
+											"pm.test(\"Verify the username and password is passed as a paramaters. \"), function () {\r",
+											"  pm.expect(queryParams['username']).not.null; \r",
+											"  pm.expect(queryParams['password']).not.null; \r",
+											"};\r",
+											"var length= queryParams['username'].length;\r",
+											"var username= queryParams['username'].substring(2,(length-2));\r",
+											"var password= queryParams['password'].substring(2,(length-2));\r",
+											" console.log(\"Username= \"+pm.collectionVariables.get(username)+\" | Password= \"+pm.collectionVariables.get(password));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify the response status code is 200, when user logs into the system(successful operation)\r",
+											"\r",
+											"pm.test(\"Response status code is 200, when Logs user into the system (successful operation)\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/user/login?username={{username3}}&password={{password3}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"login"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "{{username3}}",
+											"description": "(Required) The user name for login"
+										},
+										{
+											"key": "password",
+											"value": "{{password3}}",
+											"description": "(Required) The password for login in clear text"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Log user into the system - Invalid username/password supplied",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var invalidUsername = pm.variables.set('invalidUsername',\"$&^\");\r",
+											"const queryParams = pm.request.url.query.toObject();\r",
+											"pm.test(\"Verify the username and password is passed as a paramaters. \"), function () {\r",
+											"  pm.expect(queryParams['username']).not.null; \r",
+											"  pm.expect(queryParams['password']).not.null; \r",
+											"};\r",
+											"var length= queryParams['username'].length;\r",
+											"var username= queryParams['username'].substring(2,(length-2));\r",
+											"var password= queryParams['password'].substring(2,(length-2));\r",
+											" console.log(\"Username= \"+pm.collectionVariables.get(username)+\" | Password= \"+pm.collectionVariables.get(password));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify the response status code is 400, when user logs into the system(invalid username/password supplied)\r",
+											"\r",
+											"pm.test(\"Response status code is 400, when Logs user into the system (invalid username/password supplied)\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/login?username={{invalidUsername}}&password={{password3}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"login"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "{{invalidUsername}}",
+											"description": "(Required) The user name for login"
+										},
+										{
+											"key": "password",
+											"value": "{{password3}}",
+											"description": "(Required) The password for login in clear text"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "{username}",
+					"item": [
+						{
+							"name": "Get user by user name",
+							"item": [
+								{
+									"name": "Get user by user name - successful operation",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"// Verify the username is passed as a paramater\r",
+													"const username = pm.collectionVariables.get(\"username1\");\r",
+													"pm.test(\"Verify the username is passed as a paramater. \"), function () {\r",
+													"  pm.expect(username).not.null; \r",
+													"};\r",
+													" console.log(\"The username searched for= \",username);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 200, when getting user by user name - successful operation\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 200, when getting user by user name - successful operation\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(200);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": "{{username1}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get user by user name - Invalid username supplied",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.variables.set(\"invalidUsername\", pm.variables.replaceIn(\"&*%$@\"));\r",
+													"\r",
+													"// Verify the username is passed as a paramater\r",
+													"const invalidUsername = pm.variables.get(\"invalidUsername\");\r",
+													"pm.test(\"Verify the invalid username is passed as a paramater. \"), function () {\r",
+													"  pm.expect(invalidUsername).not.null; \r",
+													"};\r",
+													" console.log(\"The username searched for= \",invalidUsername);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 400, when getting user by user name - successful operation\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 400, when getting user by user name - Invalid username supplied operation\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(400);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": "{{invalidUsername}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get user by user name - User not found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.variables.set(\"nonExistingUser\", pm.collectionVariables.replaceIn(\"nonExistingUser\"+\"{{$randomInt}}\"));\r",
+													"\r",
+													"// Verify the non-existing username is passed as a paramater\r",
+													"const nonExistingUser = pm.variables.get(\"nonExistingUser\");\r",
+													"pm.test(\"Verify the non-existing username is passed as a paramater. \"), function () {\r",
+													"  pm.expect(nonExistingUser).not.null; \r",
+													"};\r",
+													" console.log(\"The non-existing username searched for= \",nonExistingUser);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 404, when getting user by user name - User not found\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 404, when getting user by user name - User not found\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(404);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Updated user",
+							"item": [
+								{
+									"name": "Update user - Invalid user supplied",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.variables.set(\"newEmail\", pm.variables.replaceIn(\"{{$randomLastName}}\"+\"{{email1}}\"));\r",
+													"\r",
+													"// Verify the all details are passed as a paramater\r",
+													"pm.test(\"Check all required details except username are passed, when updating user - Invalid user supplied\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).not.null; \r",
+													"  pm.expect(requestData(\"firstName\")).not.null; \r",
+													"  pm.expect(requestData(\"lastName\")).not.null; \r",
+													"  pm.expect(requestData(\"email\")).not.null; \r",
+													"  pm.expect(requestData(\"password\")).not.null; \r",
+													"  pm.expect(requestData(\"phone\")).not.null; \r",
+													"  pm.expect(requestData(\"userStatus\")).not.null; \r",
+													"};\r",
+													"\r",
+													"// Verify the username is invalid username as a paramater\r",
+													"pm.test(\"Verify the username is invalid username as a paramater, when Update user - Invalid user supplied\"),function () {\r",
+													"  pm.expect(requestData(\"username\")).is.not.string |  pm.expect(requestData(\"username\")).is.not.null |  pm.expect(requestData(\"username\")).is.empty;;\r",
+													"    \r",
+													"};"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 400, when Update user - Invalid user supplied\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 400, when Update user - Invalid user suppliedn\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(400);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\n    \"id\": \"{{userID1}}\",\n    \"username\": %&,\n    \"firstName\": \"{{firstname1}}\",\n    \"lastName\": \"{{lastname1}}\",\n    \"email\": \"{{newEmail}}\",\n    \"password\": \"{{password1}}\",\n    \"phone\": \"{{phone1}}\",\n    \"userStatus\": \"{{userStatus1}}\"\n  }",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": "{{username1}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Updated user - User not found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.variables.set(\"nonExistingUsername\", pm.variables.replaceIn(\"{{username1}}\"+\"{{$randomInt}}\"));\r",
+													"pm.variables.set(\"newEmail\", pm.variables.replaceIn(\"{{$randomLastName}}\"+\"{{email1}}\"));\r",
+													"\r",
+													"// Verify the all details are passed as a paramater\r",
+													"pm.test(\"Check all required details are passed, when updating user - User not found\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).not.null; \r",
+													"  pm.expect(requestData(\"username\")).not.null; \r",
+													"  pm.expect(requestData(\"firstName\")).not.null; \r",
+													"  pm.expect(requestData(\"lastName\")).not.null; \r",
+													"  pm.expect(requestData(\"email\")).not.null; \r",
+													"  pm.expect(requestData(\"password\")).not.null; \r",
+													"  pm.expect(requestData(\"phone\")).not.null; \r",
+													"  pm.expect(requestData(\"userStatus\")).not.null; \r",
+													"};\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 404, when Updated user - User not found\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 404, when Updated user - User not found\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(404);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "  {\n    \"id\": \"{{userID1}}\",\n    \"username\": \"{{username1}}\",\n    \"firstName\": \"{{firstname1}}\",\n    \"lastName\": \"{{lastname1}}\",\n    \"email\": \"{{newEmail}}\",\n    \"password\": \"{{password1}}\",\n    \"phone\": \"{{phone1}}\",\n    \"userStatus\": \"{{userStatus1}}\"\n  }",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": "{{nonExistingUsername}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delete user",
+							"item": [
+								{
+									"name": "Delete user - Invalid username supplied",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.variables.set(\"invalidUsernameToDelete\", pm.variables.replaceIn(\"{{username2}}\"+\"^&%\"));\r",
+													"\r",
+													"const invalidUsernameToDelete= pm.variables.get(\"invalidUsernameToDelete\");\r",
+													"pm.test(\"Verify the username is passed as a paramater. - Delete user - Invalid username supplied \"), function () {\r",
+													"  pm.expect(invalidUsernameToDelete).not.null; \r",
+													"};\r",
+													" console.log(\"The username searched to be delete= \",invalidUsernameToDelete);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 404 - Delete user - Invalid username supplied\"\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 404 - Delete user - Invalid username supplied\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(404);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": ""
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete user - User not found",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.variables.set(\"nonExistingUsername\", pm.variables.replaceIn(\"{{username2}}\"+\"{{$randomInt}}\"));\r",
+													"\r",
+													"const userToDelete= pm.variables.get(\"nonExistingUsername\");\r",
+													"pm.test(\"Verify the username is passed as a paramater. - Delete user - User not found \"), function () {\r",
+													"  pm.expect(userToDelete).not.null; \r",
+													"};\r",
+													" console.log(\"The username searched to delete= \",userToDelete);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 404 - Delete user - User not found\"\r",
+													"\r",
+													"pm.test(\"Verify the response status code is 404 - Delete user - User not found\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(404);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/user/:username",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												":username"
+											],
+											"variable": [
+												{
+													"key": "username",
+													"value": "{{nonExistingUsername}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "logout",
+					"item": [
+						{
+							"name": "Logs out current logged in user session - Successful operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const completeRequestURL = pm.request.url.toString();\r",
+											"pm.test(\"Verify the request url is for logging out.\", function () {\r",
+											"    pm.expect(completeRequestURL).to.contains('logout');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify the response status code is 200 - Logs out current logged in user session - Successful operation\"\r",
+											"\r",
+											"pm.test(\"Verify the response status code is 200 - Logs out current logged in user session - Successful operation\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logs out current logged in user session",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"logout"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "successful operation",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/user/logout",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												"logout"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "store",
+			"item": [
+				{
+					"name": "inventory",
+					"item": [
+						{
+							"name": "Returns pet inventories by status - Successful operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const completeRequestURL = pm.request.url.toString();\r",
+											"pm.test(\"Verify the request url is for returning pet inventories by status.\", function () {\r",
+											"   pm.expect(completeRequestURL).to.contains('store') && pm.expect(completeRequestURL).to.contains('inventory') ;\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify the response status code is 200 - Returns pet inventories by status - Successful operation\r",
+											"\r",
+											"pm.test(\"Verify the response status code is 200 - Returns pet inventories by status - Successful operation\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "api_key",
+										"value": "<API Key>",
+										"description": "Added as a part of security scheme: apikey"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/store/inventory",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"store",
+										"inventory"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User login",
+					"item": [
+						{
+							"name": "Logs user into the system - successful operation",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const queryParams = pm.request.url.query.toObject();\r",
+											"pm.test(\"Verify the username and password is passed as a paramaters. \"), function () {\r",
+											"  pm.expect(queryParams['username']).not.null; \r",
+											"  pm.expect(queryParams['password']).not.null; \r",
+											"};\r",
+											"var length= queryParams['username'].length;\r",
+											"var username= queryParams['username'].substring(2,(length-2));\r",
+											"var password= queryParams['password'].substring(2,(length-2));\r",
+											" console.log(\"Username= \"+pm.collectionVariables.get(username)+\" | Password= \"+pm.collectionVariables.get(password));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Verify the response status code is 200, when user logs into the system(successful operation)\r",
+											"\r",
+											"pm.test(\"Response status code is 200, when Logs user into the system (successful operation)\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/user/login?username={{username3}}&password={{password3}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"login"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "{{username3}}",
+											"description": "(Required) The user name for login"
+										},
+										{
+											"key": "password",
+											"value": "{{password3}}",
+											"description": "(Required) The password for login in clear text"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "order",
+					"item": [
+						{
+							"name": "Place an order for a pet",
+							"item": [
+								{
+									"name": "Place an order for a pet - successful operation",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"petIdForOrder\", pm.collectionVariables.replaceIn(_.random([lower=1], [upper=10])));\r",
+													"pm.collectionVariables.set(\"orderQuantity\", pm.collectionVariables.replaceIn(_.random([lower=1], [upper=1000])));\r",
+													"var date =  new Date().toISOString();\r",
+													"pm.collectionVariables.set(\"shipDate\", pm.collectionVariables.replaceIn(date));\r",
+													"pm.collectionVariables.set(\"complete\", pm.collectionVariables.replaceIn(\"{{$randomBoolean}}\"));\r",
+													"\r",
+													"// Verify all the mandatory details are passed \r",
+													"pm.test(\"Verify all the mandatory details are passed , when placing an order for a pet(successful operation)\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).not.null; \r",
+													"  pm.expect(requestData(\"petId\")).not.null; \r",
+													"  pm.expect(requestData(\"quantity\")).not.null; \r",
+													"  pm.expect(requestData(\"shipDate\")).not.null; \r",
+													"  pm.expect(requestData(\"status\")).not.null; \r",
+													"  pm.expect(requestData(\"complete\")).not.null; \r",
+													"};\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 200, when placing an order for a pet(successful operation)\r",
+													"\r",
+													"pm.test(\"Response status code is 200, when placing an order for a pet(successful operation)\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(200);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": {{userID3}},\n  \"petId\": {{petIdForOrder}},\n  \"quantity\": {{orderQuantity}},\n  \"shipDate\": \"{{shipDate}}\",\n  \"status\": \"placed\",\n  \"complete\": \"{{complete}}\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/store/order",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"store",
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Place an order for a pet - Invalid operation",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"petIdForOrder\", pm.collectionVariables.replaceIn(_.random([lower=1], [upper=10])));\r",
+													"pm.collectionVariables.set(\"orderQuantity\", pm.collectionVariables.replaceIn(_.random([lower=1], [upper=1000])));\r",
+													"var date =  new Date().toISOString();\r",
+													"pm.collectionVariables.set(\"shipDate\", pm.collectionVariables.replaceIn(date));\r",
+													"pm.collectionVariables.set(\"complete\", pm.collectionVariables.replaceIn(\"{{$randomBoolean}}\"));\r",
+													"\r",
+													"// Verify all the mandatory details are passed \r",
+													"pm.test(\"Verify all the mandatory details are passed , when placing an order for a pet(successful operation)\"),function () {\r",
+													"  pm.expect(requestData(\"id\")).is.null; \r",
+													"  pm.expect(requestData(\"petId\")).not.null; \r",
+													"  pm.expect(requestData(\"quantity\")).not.null; \r",
+													"  pm.expect(requestData(\"shipDate\")).not.null; \r",
+													"  pm.expect(requestData(\"status\")).not.null; \r",
+													"  pm.expect(requestData(\"complete\")).not.null; \r",
+													"};\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Verify the response status code is 400, when placing an order for a pet(invalid operation)\r",
+													"\r",
+													"pm.test(\"Response status code is 400, when placing an order for a pet(invalid operation)\", function () {\r",
+													"    pm.expect(pm.response.code).to.equal(400);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": ,\n  \"petId\": \"{{petIdForOrder}}\",\n  \"quantity\": \"{{orderQuantity}}\",\n  \"shipDate\": \"{{shipDate}}\",\n  \"status\": \"placed\",\n  \"complete\": \"{{complete}}\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/store/order",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"store",
+												"order"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "{orderId}",
+							"item": [
+								{
+									"name": "Find purchase order by ID",
+									"item": [
+										{
+											"name": "Find purchase order by ID- successful operation",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// Verify orderID(petID) is passed\r",
+															"pm.test(\"Verify orderID(petID) is passed , when finding purchase order by ID (successful operation)\"),function () {\r",
+															"  pm.expect(requestData(\"petId\")).not.null;  \r",
+															"};\r",
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"//Verify the response status code is 200, when finding purchase order by ID (successful operation)\r",
+															"pm.test(\"Response status code is 200, when finding purchase order by ID (successful operation)\", function () {\r",
+															"    pm.expect(pm.response.code).to.equal(200);\r",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/store/order/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"store",
+														"order",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": "{{petIdForOrder}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Find purchase order by ID- Invalid ID supplied",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"var invalidPetID = pm.variables.set(\"invalidPetId\", pm.collectionVariables.replaceIn(\"&^%\"));\r",
+															"\r",
+															"// Verify orderID(petID) is passed\r",
+															"pm.test(\"Verify orderID(petID) is passed , when finding purchase order by ID (successful operation)\"),function () {\r",
+															"  pm.expect(requestData(\"petId\")).not.null;  \r",
+															"};\r",
+															"console.log(\"Invlid pet ID= \",invalidPetID);\r",
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"//Verify the response status code is 400, when finding purchase order by ID (Invalid ID supplied)\r",
+															"pm.test(\"Response status code is 400, when finding purchase order by ID (Invalid ID supplied)\", function () {\r",
+															"    pm.expect(pm.response.code).to.equal(400);\r",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/store/order/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"store",
+														"order",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": "{{invalidPetId}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Find purchase order by ID- order not found",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// Verify orderID(petID) is passed\r",
+															"pm.test(\"Verify orderID(petID) is passed , when finding purchase order by ID (order not found)\"),function () {\r",
+															"  pm.expect(requestData(\"petId\")).not.null;  \r",
+															"};\r",
+															"console.log(\"Non-Existing pet ID= \",\"{{petIDWithoutRecord}}\");\r",
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"//Verify the response status code is 404, when finding purchase order by ID (order not found)\r",
+															"pm.test(\"Response status code is 404, when finding purchase order by ID (order not found)\", function () {\r",
+															"    pm.expect(pm.response.code).to.equal(404);\r",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/store/order/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"store",
+														"order",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": "{{petIDWithoutRecord}}"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Delete purchase order by ID",
+									"item": [
+										{
+											"name": "Delete purchase order by ID - Invalid ID supplied",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"var invalidPetID = pm.variables.set(\"invalidPetId\", pm.collectionVariables.replaceIn(\"&^%\"));\r",
+															"\r",
+															"// Verify orderID(petID) is passed\r",
+															"pm.test(\"Verify orderID(petID) is passed , when deleting purchase order by ID (Invalid ID supplied)\"),function () {\r",
+															"  pm.expect(requestData(\"petId\")).not.null;  \r",
+															"};\r",
+															"console.log(\"Invlid pet ID= \",invalidPetID);\r",
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"//Verify the response status code is 400, when deleting purchase order by ID (Invalid ID supplied)\r",
+															"pm.test(\"Response status code is 400, when deleting purchase order by ID (Invalid ID supplied)\", function () {\r",
+															"    pm.expect(pm.response.code).to.equal(400);\r",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/store/order/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"store",
+														"order",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": "{{invalidPetId}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete purchase order by ID - Order not found",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// Verify orderID(petID) is passed\r",
+															"pm.test(\"Verify orderID(petID) is passed , when deleting purchase order by ID (Order not found)\"),function () {\r",
+															"  pm.expect(requestData(\"petId\")).not.null;  \r",
+															"};\r",
+															"console.log(\"Non-Existing pet ID= \",\"{{petIDWithoutRecord}}\");\r",
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"//Verify the response status code is 404, when deleting purchase order by ID (Order not found)\r",
+															"pm.test(\"Response status code is 404, when deleting purchase order by ID (Order not found)\", function () {\r",
+															"    pm.expect(pm.response.code).to.equal(404);\r",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/store/order/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"store",
+														"order",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": "{{petIDWithoutRecord}}"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete purchase order by ID- Successful operation",
+											"event": [
+												{
+													"listen": "prerequest",
+													"script": {
+														"exec": [
+															"// Verify orderID(petID) is passed\r",
+															"pm.test(\"Verify orderID(petID) is passed , when deleting purchase order by ID (Successful operation)\"),function () {\r",
+															"  pm.expect(requestData(\"petId\")).not.null;  \r",
+															"};\r",
+															"console.log(\"Deleted pet ID= \",\"{{petID}}\");\r",
+															""
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												},
+												{
+													"listen": "test",
+													"script": {
+														"exec": [
+															"//Verify the response status code is 200, when deleting purchase order by ID (Successful operation)\r",
+															"pm.test(\"Response status code is 200, when deleting purchase order by ID (Successful operation)\", function () {\r",
+															"    pm.expect(pm.response.code).to.equal(200);\r",
+															"});"
+														],
+														"type": "text/javascript",
+														"packages": {}
+													}
+												}
+											],
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/store/order/:orderId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"store",
+														"order",
+														":orderId"
+													],
+													"variable": [
+														{
+															"key": "orderId",
+															"value": "{{petID}}",
+															"description": "(Required) ID of the order that needs to be deleted"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// pm.variables.set(\"petsname\",pm.variables.replaceIn(\"{{$randomFirstName}}\"))\r",
+					"pm.collectionVariables.set(\"petIDWithoutRecord\", pm.collectionVariables.replaceIn(\"{{$randomInt}}\"));\r",
+					"\r",
+					"\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2"
+		},
+		{
+			"key": "petID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "petsname",
+			"value": ""
+		},
+		{
+			"key": "AddANewPetToTheStore",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "petIDWithoutRecord",
+			"value": ""
+		},
+		{
+			"key": "AddANewPetToTheStore",
+			"value": ""
+		},
+		{
+			"key": "petStatus",
+			"value": ""
+		},
+		{
+			"key": "validStatusesForPets",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "username1",
+			"value": ""
+		},
+		{
+			"key": "firstname1",
+			"value": ""
+		},
+		{
+			"key": "lastname1",
+			"value": ""
+		},
+		{
+			"key": "userID1",
+			"value": ""
+		},
+		{
+			"key": "email1",
+			"value": ""
+		},
+		{
+			"key": "password1",
+			"value": ""
+		},
+		{
+			"key": "phone1",
+			"value": ""
+		},
+		{
+			"key": "userStatus1",
+			"value": ""
+		},
+		{
+			"key": "username2",
+			"value": ""
+		},
+		{
+			"key": "firstname2",
+			"value": ""
+		},
+		{
+			"key": "lastname2",
+			"value": ""
+		},
+		{
+			"key": "userID2",
+			"value": ""
+		},
+		{
+			"key": "email2",
+			"value": ""
+		},
+		{
+			"key": "password2",
+			"value": ""
+		},
+		{
+			"key": "phone2",
+			"value": ""
+		},
+		{
+			"key": "userStatus2",
+			"value": ""
+		},
+		{
+			"key": "username3",
+			"value": ""
+		},
+		{
+			"key": "firstname3",
+			"value": ""
+		},
+		{
+			"key": "lastname3",
+			"value": ""
+		},
+		{
+			"key": "userID3",
+			"value": ""
+		},
+		{
+			"key": "email3",
+			"value": ""
+		},
+		{
+			"key": "password3",
+			"value": ""
+		},
+		{
+			"key": "phone3",
+			"value": ""
+		},
+		{
+			"key": "userStatus3",
+			"value": ""
+		},
+		{
+			"key": "username4",
+			"value": ""
+		},
+		{
+			"key": "firstname4",
+			"value": ""
+		},
+		{
+			"key": "lastname4",
+			"value": ""
+		},
+		{
+			"key": "userID4",
+			"value": ""
+		},
+		{
+			"key": "email4",
+			"value": ""
+		},
+		{
+			"key": "password4",
+			"value": ""
+		},
+		{
+			"key": "phone4",
+			"value": ""
+		},
+		{
+			"key": "userStatus4",
+			"value": ""
+		},
+		{
+			"key": "orderQuantity",
+			"value": ""
+		},
+		{
+			"key": "shipDate",
+			"value": ""
+		},
+		{
+			"key": "complete",
+			"value": ""
+		},
+		{
+			"key": "petId",
+			"value": ""
+		},
+		{
+			"key": "petIdForOrder",
+			"value": ""
+		}
+	]
+}
